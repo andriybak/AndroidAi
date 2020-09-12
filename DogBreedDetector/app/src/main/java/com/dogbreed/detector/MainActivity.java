@@ -7,8 +7,6 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static float MINIMUM_CONFIDENCE_TF_OD_API = 0.15f;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

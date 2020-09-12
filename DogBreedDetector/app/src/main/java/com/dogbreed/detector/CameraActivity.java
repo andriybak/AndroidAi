@@ -32,9 +32,7 @@ public abstract class CameraActivity extends AppCompatActivity
         View.OnClickListener
 {
     private static final Logger LOGGER = new Logger();
-
     private static final int PERMISSIONS_REQUEST = 1;
-
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     protected int previewWidth = 0;
     protected int previewHeight = 0;

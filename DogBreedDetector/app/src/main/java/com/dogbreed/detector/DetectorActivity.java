@@ -11,7 +11,6 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
@@ -26,15 +25,15 @@ import java.util.List;
  * objects.
  */
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
+
+    public static final float MINIMUM_CONFIDENCE_SCORE = 0.15f;
+
     private static final Logger LOGGER = new Logger();
 
     private static final int TF_OD_API_INPUT_SIZE = 416;
-    private static final boolean TF_OD_API_IS_QUANTIZED = false
-            ;
     private static final String TF_OD_API_MODEL_FILE = "yolov4-416-fp32.tflite";
     private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/coco.txt";
 
-    private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.15f;
     private static final boolean MAINTAIN_ASPECT = false;
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
 
@@ -74,7 +73,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         try
         {
-            detector = DogBreedClassifier.create(getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_IS_QUANTIZED);
+            detector = DogBreedClassifier.create(getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE);
             cropSize = TF_OD_API_INPUT_SIZE;
         }
         catch (final IOException e)
@@ -165,15 +164,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         paint.setStyle(Style.STROKE);
                         paint.setStrokeWidth(2.0f);
 
-                        float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
-
                         final List<Classifier.Recognition> mappedRecognitions =
                                 new LinkedList<Classifier.Recognition>();
 
                         for (final Classifier.Recognition result : results)
                         {
                             final RectF location = result.getLocation();
-                            if (location != null && result.getConfidence() >= minimumConfidence)
+                            if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_SCORE)
                             {
                                 canvas.drawRect(location, paint);
 
